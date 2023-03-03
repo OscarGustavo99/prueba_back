@@ -1,10 +1,10 @@
 const {Router} = require('express')
 const { check } = require('express-validator')
 const { CrearActividad } = require('../controllers/auth')
+const { getActivities } = require('../controllers/getActivities')
 const { validarCampos } = require('../middlewares/validar-campos')
 
 const router = Router()
-
 
 router.post('/new',[
 
@@ -15,6 +15,7 @@ router.post('/new',[
     validarCampos
 
 ],CrearActividad)
+
 
 
 

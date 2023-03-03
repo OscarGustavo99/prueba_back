@@ -24,6 +24,8 @@ const CrearActividad = async(req, res = response) =>{
     }
 }
 
+
+
 module.exports = {
     CrearActividad
 }

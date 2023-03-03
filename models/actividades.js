@@ -4,23 +4,22 @@ const ActividadSchema = Schema({
 
     cuenta:{
         type: Number,
-        
-        // required:true
+        required:true
     },
 
     monto:{
         type: Number,
-        // required:true
+        required:true
     },
 
     status:{
         type: String,
-        // required:true
+        required:true
     },
 
     descripcion:{
-        typeof: String,
-        // required: true
+        type: String,
+        required: true
     }
 })
 
