@@ -1,4 +1,4 @@
-
+const { getTableActivities, createActivities } = require("../controllers/sockets");
 
 class Sockets {
 
@@ -9,18 +9,26 @@ class Sockets {
 
     socketEvents() {
         // On connection
-        this.io.on('connection', async( socket ) => {
+        this.io.on('connection', async (socket) => {
+            console.log('Cliente Conectadoo')
 
-            // Escuchar evento: mensaje-to-server
-            socket.on('mensaje-to-server', ( data ) => {
-                console.log( data );
-                this.io.emit('mensaje-from-server', data );
-            });
+            socket.on('activities',(data)=>{
+                console.log(data)
+            })
 
+            // this.io.emit('tableActivities', await getTableActivities())
 
-            socket.join(uid)
-            
-        
+            socket.on('message', async(data)=>{
+                await createActivities(data)
+                this.io.emit('tableActivities', await getTableActivities())
+
+            })
+
+            socket.on('getTables', async()=>{
+                this.io.emit('tableActivities', await getTableActivities())
+            })
+      
+
         });
     }
 

@@ -1,7 +1,7 @@
 // Servidor de Express
 const express  = require('express');
 const http     = require('http');
-const socketio = require('socket.io');
+const socket = require('socket.io');
 const path     = require('path');
 
 const {dbConnection} = require('../database/config');
@@ -22,7 +22,11 @@ class Server {
         dbConnection()
         
         // Configuraciones de sockets
-        this.io = socketio( this.server, { /* configuraciones */ } );
+        this.io = socket( this.server, { 
+                cors:{
+                    origin: '*'
+                }
+         } );
 
         // Inizializar Sockets
         this.sockets = new Sockets(this.io)

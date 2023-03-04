@@ -2,24 +2,24 @@ const { Schema, model } = require('mongoose')
 
 const ActividadSchema = Schema({
 
-    cuenta:{
-        type: Number,
-        required:true
+    account:{
+        type: String,
+        require: true
     },
 
-    monto:{
-        type: Number,
-        required:true
+    amount:{
+        type: String,
+        require: true
     },
 
     status:{
         type: String,
-        required:true
+        require:true
     },
 
-    descripcion:{
+    description:{
         type: String,
-        required: true
+        require: true
     }
 })
 
