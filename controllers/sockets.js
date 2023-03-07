@@ -13,7 +13,16 @@ const createActivities = async(data) =>{
     return createActivities
 }
 
+const selectRow = async(data) =>{
+    const {uid} = data
+    const activity = await Actividad.findById(uid)
+    activity.status = 'PROCESO'
+    await activity.save()
+}
+
+
 module.exports = {
     getTableActivities,
-    createActivities
+    createActivities,
+    selectRow
 }

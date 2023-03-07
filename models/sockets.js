@@ -1,4 +1,4 @@
-const { getTableActivities, createActivities } = require("../controllers/sockets");
+const { getTableActivities, createActivities, selectRow } = require("../controllers/sockets");
 
 class Sockets {
 
@@ -27,6 +27,12 @@ class Sockets {
             socket.on('getTables', async()=>{
                 this.io.emit('tableActivities', await getTableActivities())
             })
+
+            socket.on('selectRow', async(data)=>{
+                await selectRow(data)
+                this.io.emit('tableActivities', await getTableActivities())
+            })
+
       
 
         });
