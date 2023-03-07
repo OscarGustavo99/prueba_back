@@ -20,9 +20,17 @@ const selectRow = async(data) =>{
     await activity.save()
 }
 
+const selectRowDelete =  async(data)=>{
+    const {uid} = data
+    const activity = await Actividad.findById(uid)
+    activity.status= 'PENDIENTE'
+    await activity.save()
+}
+
 
 module.exports = {
     getTableActivities,
     createActivities,
+    selectRowDelete,
     selectRow
 }
