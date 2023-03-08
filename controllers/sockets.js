@@ -9,6 +9,7 @@ const getTableActivities = async() =>{
 const createActivities = async(data) =>{
     console.log(data)
     const createActivities = await Actividad(data)
+    createActivities.notification = false
     await createActivities.save()
     return createActivities
 }

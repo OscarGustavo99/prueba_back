@@ -2,29 +2,36 @@ const { Schema, model } = require('mongoose')
 
 const ActividadSchema = Schema({
 
-    account:{
+    account: {
         type: String,
         require: true
     },
 
-    amount:{
+    amount: {
         type: String,
         require: true
     },
 
-    status:{
-        type: String,
-        require:true
-    },
-
-    description:{
+    status: {
         type: String,
         require: true
-    }
+    },
+
+    description: {
+        type: String,
+        require: true
+    },
+    notification: {
+        type: Boolean,
+        default: false
+    },
+}, {
+    // Esto va adicional la fecha de creacion y ultima modificacion
+    timestamps: true
 })
 
-ActividadSchema.method('toJSON', function (){
-    const {__v, _id, ...object} = this.toObject()
+ActividadSchema.method('toJSON', function () {
+    const { __v, _id, ...object } = this.toObject()
     object.uid = _id
     return object
 })

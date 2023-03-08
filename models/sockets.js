@@ -17,16 +17,16 @@ class Sockets {
             });
 
             // this.io.emit('tableActivities', await getTableActivities())
-
+            socket.on('getTables', async()=>{
+                this.io.emit('tableActivities', await getTableActivities())
+            });
+            
             socket.on('message', async(data)=>{
                 await createActivities(data);
                 this.io.emit('tableActivities', await getTableActivities())
 
             });
 
-            socket.on('getTables', async()=>{
-                this.io.emit('tableActivities', await getTableActivities())
-            });
 
             socket.on('selectRow', async(data)=>{
                 await selectRow(data);
