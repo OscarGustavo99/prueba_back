@@ -20,14 +20,7 @@ const ActividadSchema = Schema({
     description: {
         type: String,
         require: true
-    },
-    notification: {
-        type: Boolean,
-        default: false
-    },
-}, {
-    // Esto va adicional la fecha de creacion y ultima modificacion
-    timestamps: true
+    }
 })
 
 ActividadSchema.method('toJSON', function () {

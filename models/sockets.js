@@ -1,4 +1,13 @@
-const { getTableActivities, createActivities, selectRow, selectRowDelete } = require("../controllers/sockets");
+const { 
+    getTableActivities, 
+    createActivities, 
+    selectRow, 
+    selectRowDelete,
+    createNotifications, 
+    getNotifications, 
+    deletedNotifications,
+    messageRead
+} = require("../controllers/sockets");
 
 class Sockets {
 
@@ -12,21 +21,24 @@ class Sockets {
         this.io.on('connection', async (socket) => {
             console.log('Cliente Conectadoo')
 
-            socket.on('activities',(data)=>{
-                console.log(data)
-            });
-
-            // this.io.emit('tableActivities', await getTableActivities())
             socket.on('getTables', async()=>{
                 this.io.emit('tableActivities', await getTableActivities())
+                this.io.emit('tableNotifications',await getNotifications())
             });
-            
-            socket.on('message', async(data)=>{
-                await createActivities(data);
+
+            socket.on('sendActivity', async(data)=>{
+                const newActivity = await createActivities(data);
+                await createNotifications(newActivity);
+
+                this.io.emit('tableNotifications',await getNotifications())
                 this.io.emit('tableActivities', await getTableActivities())
 
             });
 
+            socket.on('deletedNotification', async (data)=>{
+                await deletedNotifications(data)
+                this.io.emit('tableNotifications',await getNotifications())
+            });
 
             socket.on('selectRow', async(data)=>{
                 await selectRow(data);
@@ -38,6 +50,14 @@ class Sockets {
                 this.io.emit('tableActivities', await getTableActivities())
             });
 
+            socket.on('messageRead', async(data)=>{
+                await messageRead(data)
+                this.io.emit('tableNotifications', await getNotifications())
+            });
+
+            socket.on('markAllAsRead', async(data)=>{
+                console.log(data)
+            })
       
 
         });
