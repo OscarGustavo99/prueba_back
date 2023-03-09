@@ -6,7 +6,8 @@ const {
     createNotifications, 
     getNotifications, 
     deletedNotifications,
-    messageRead
+    messageRead,
+    markAllAsRead
 } = require("../controllers/sockets");
 
 class Sockets {
@@ -55,8 +56,10 @@ class Sockets {
                 this.io.emit('tableNotifications', await getNotifications())
             });
 
+            //TODO: PENDIENTE
             socket.on('markAllAsRead', async(data)=>{
-                console.log(data)
+                await markAllAsRead(data) // ACTUALIZASTE
+                this.io.emit('markAllAsNotificationsRead', await getTableActivities())
             })
       
 

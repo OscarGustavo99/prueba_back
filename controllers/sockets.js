@@ -44,29 +44,41 @@ const getNotifications = async () =>{
 }
 
 const deletedNotifications = async (selectId) => {
+    console.log(selectId)
     try{
-        const notification = await Notificacion.findById(selectId)
-        await notification.deleteOne({notification});
-        return
+        await Notificacion.deleteOne({_id:selectId});
+        return 
 
     }catch(err){
         console.log(err)
     }    
 }
 
-const markAllAsRead = async (data)=>{
+const markAllAsRead = async (newArray)=>{
     try{
-
+        await Notificacion.updateMany(
+            { _id: { $in: newArray.map(u => u.uid) } },
+            {notification:true}
+            )
+        return 
     }catch(err){
+        
         console.log(err)
     }
 }
 
 const messageRead = async(messageId)=>{
     try{
-        const idRead = await Notificacion.findById(messageId)
-        idRead.notification = true
-        await idRead.save()
+        if(messageId !== null){
+            await Notificacion?.findOneAndUpdate(
+                {_id:messageId},
+                {$set:{notification:true}},
+                { new: true },
+            )
+           
+        }
+        return
+
     }catch(err){
         console.log(err)
     }
@@ -104,6 +116,7 @@ module.exports = {
     createActivities,
     deletedNotifications,
     messageRead,
+    markAllAsRead,
     selectRowDelete,
     selectRow
 }
