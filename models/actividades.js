@@ -2,6 +2,11 @@ const { Schema, model } = require('mongoose')
 
 const ActividadSchema = Schema({
 
+    id_User:{
+       type:Schema.Types.ObjectId,
+       ref: 'Notificacion', //?
+       require: true 
+    },
     account: {
         type: String,
         require: true

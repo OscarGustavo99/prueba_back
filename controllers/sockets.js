@@ -13,6 +13,7 @@ const getTableActivities = async () => {
 
 
 const createActivities = async (data) => {
+    console.log(data)
     try {
         const createActivities = await Actividad(data)
         await createActivities.save()
@@ -23,9 +24,13 @@ const createActivities = async (data) => {
     }
 }
 
-const createNotifications = async ({ description, notification }) => {
+const createNotifications = async ({ id_User, description, notification }) => {
     try {
-        const objectNotificacion = { description, notification }
+        const objectNotificacion = {
+            de: id_User,
+            description,
+            notification
+        }
         const notify = new Notificacion(objectNotificacion)
         await notify.save()
 

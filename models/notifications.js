@@ -1,7 +1,19 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model, SchemaType } = require('mongoose')
 
 const NotificationSchema =  Schema({
     
+    de:{
+        type:Schema.Types.ObjectId,
+        ref: 'Actividad',
+        require: true
+    },
+
+    para:{
+        type:Schema.Types.ObjectId,
+        ref: 'Actividad',
+        require:true
+    },
+
     description: {
         type: String,
         ref:'Actividad',
