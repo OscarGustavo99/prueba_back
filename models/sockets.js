@@ -22,6 +22,7 @@ class Sockets {
         this.io.on('connection', async (socket) => {
             console.log('Cliente Conectadoo')
 
+            //* Obtiene Tablas
             socket.on('getTables', async()=>{
                 this.io.emit('tableActivities', await getTableActivities())
                 this.io.emit('tableNotifications',await getNotifications())
@@ -58,8 +59,8 @@ class Sockets {
 
             //TODO: PENDIENTE
             socket.on('markAllAsRead', async(data)=>{
-                await markAllAsRead(data) // ACTUALIZASTE
-                this.io.emit('markAllAsNotificationsRead', await getTableActivities())
+                await markAllAsRead(data) 
+                this.io.emit('tableNotifications', await getNotifications())
             })
       
 

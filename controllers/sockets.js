@@ -34,8 +34,8 @@ const createNotifications = async ({ description, notification }) => {
     }
 }
 
-const getNotifications = async () =>{
-    try{
+const getNotifications = async () => {
+    try {
         const activides = await Notificacion.find()
         return activides
     } catch (err) {
@@ -45,41 +45,44 @@ const getNotifications = async () =>{
 
 const deletedNotifications = async (selectId) => {
     console.log(selectId)
-    try{
-        await Notificacion.deleteOne({_id:selectId});
-        return 
+    try {
+        await Notificacion.deleteOne({ _id: selectId });
+        return
 
-    }catch(err){
-        console.log(err)
-    }    
-}
-
-const markAllAsRead = async (newArray)=>{
-    try{
-        await Notificacion.updateMany(
-            { _id: { $in: newArray.map(u => u.uid) } },
-            {notification:true}
-            )
-        return 
-    }catch(err){
-        
+    } catch (err) {
         console.log(err)
     }
 }
 
-const messageRead = async(messageId)=>{
-    try{
-        if(messageId !== null){
+const markAllAsRead = async (newArray) => {
+    // console.log('Valor:',newArray)
+    try {
+        if (newArray.length !== 0) {
+            await Notificacion.updateMany(
+                { _id: { $in: newArray.map(u => u.uid) } },
+                { notification: true }
+            )
+            return Notificacion
+        }
+    } catch (err) {
+
+        console.log(err)
+    }
+}
+
+const messageRead = async (messageId) => {
+    try {
+        if (messageId !== null) {
             await Notificacion?.findOneAndUpdate(
-                {_id:messageId},
-                {$set:{notification:true}},
+                { _id: messageId },
+                { $set: { notification: true } },
                 { new: true },
             )
-           
+
         }
         return
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
 }
