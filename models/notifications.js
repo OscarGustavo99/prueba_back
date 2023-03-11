@@ -8,6 +8,12 @@ const NotificationSchema =  Schema({
         require: true
     },
 
+    name:{
+        type: String,
+        ref: 'Actividad',
+        require: true
+    },
+
     para:{
         type:Schema.Types.ObjectId,
         ref: 'Actividad',

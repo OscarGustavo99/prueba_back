@@ -24,10 +24,11 @@ const createActivities = async (data) => {
     }
 }
 
-const createNotifications = async ({ id_User, description, notification }) => {
+const createNotifications = async ({ id_Admin,adminName, description, notification }) => {
     try {
         const objectNotificacion = {
-            de: id_User,
+            de: id_Admin,
+            name: adminName,
             description,
             notification
         }

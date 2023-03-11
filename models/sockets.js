@@ -1,10 +1,10 @@
-const { 
-    getTableActivities, 
-    createActivities, 
-    selectRow, 
+const {
+    getTableActivities,
+    createActivities,
+    selectRow,
     selectRowDelete,
-    createNotifications, 
-    getNotifications, 
+    createNotifications,
+    getNotifications,
     deletedNotifications,
     messageRead,
     markAllAsRead
@@ -12,7 +12,7 @@ const {
 
 class Sockets {
 
-    constructor( io ) {
+    constructor(io) {
         this.io = io;
         this.socketEvents();
     }
@@ -21,62 +21,70 @@ class Sockets {
         // On connection
         this.io.on('connection', async (socket) => {
             console.log('Cliente Conectadoo')
-            
+
             //* SE UNE EL ADMINISTRADOR
-            socket.join('control') 
+            socket.join('control')
 
             //* SALA DE LOS USUARIOS
-            socket.on('sala-Usuarios',(id)=>{
+            socket.on('sala-Usuarios', (id) => {
                 socket.join('notifications-user')
                 console.log(`El usuario ${id}: se conecto a la sala de notificaciones`)
+
+                //TODO: PENDIENTE ELIMINAR
+                socket.on('deletedNotification', async (data) => {
+                    await deletedNotifications(data)
+                    if (socket.rooms.has('control')) {
+                        this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                    }
+                });
             })
 
-        
-            socket.on('getTables', async()=>{
+
+            socket.on('getTables', async () => {
                 this.io.emit('tableActivities', await getTableActivities())
-                if(socket.rooms.has('control')){
-                    this.io.to('notifications-user').emit('tableNotifications',await getNotifications())
+                if (socket.rooms.has('control')) {
+                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
                 }
             });
 
-            socket.on('sendActivity', async(data)=>{
+            socket.on('sendActivity', async (data) => {
                 const newActivity = await createActivities(data);
                 await createNotifications(newActivity);
-                
-                if(socket.rooms.has('control')){
-                    this.io.to('notifications-user').emit('tableNotifications',await getNotifications())
+
+                if (socket.rooms.has('control')) {
+                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
                 }
 
                 this.io.emit('tableActivities', await getTableActivities())
 
             });
 
-            socket.on('deletedNotification', async (data)=>{
-                await deletedNotifications(data)
-                this.io.emit('tableNotifications',await getNotifications())
-            });
 
-            socket.on('selectRow', async(data)=>{
+
+            socket.on('selectRow', async (data) => {
                 await selectRow(data);
                 this.io.emit('tableActivities', await getTableActivities())
             });
 
-            socket.on('deletetRow', async(data)=>{
+            socket.on('deletetRow', async (data) => {
                 await selectRowDelete(data);
                 this.io.emit('tableActivities', await getTableActivities())
             });
 
-            socket.on('messageRead', async(data)=>{
+            socket.on('messageRead', async (data) => {
                 await messageRead(data)
-                this.io.emit('tableNotifications', await getNotifications())
+                if (socket.rooms.has('control')) {
+
+                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                }
             });
 
             //TODO: PENDIENTE
-            socket.on('markAllAsRead', async(data)=>{
-                await markAllAsRead(data) 
+            socket.on('markAllAsRead', async (data) => {
+                await markAllAsRead(data)
                 this.io.emit('tableNotifications', await getNotifications())
             })
-      
+
 
         });
     }
