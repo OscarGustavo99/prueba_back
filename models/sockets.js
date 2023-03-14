@@ -32,8 +32,8 @@ class Sockets {
 
                 if (socket.rooms.has('control')) {
                     this.io.to('notifications-user').emit('tableNotifications_User', await getNotifications(id))
-
                 }
+
 
 
                 //TODO: PENDIENTE ELIMINAR
@@ -47,6 +47,7 @@ class Sockets {
 
             //TODO: DETALLE CON NOTIFICACIONES PRIMER PASO
             socket.on('getTables', async () => {
+                console.log('SE ACTIVDA')
                 this.io.emit('tableActivities', await getTableActivities())
 
                 if (socket.rooms.has('control')) {
@@ -75,8 +76,10 @@ class Sockets {
                     createNotifications(data)
                 })
 
-                this.io.to('notifications-user').emit('activar_notificacion')
-
+                if (socket.rooms.has('control')) {
+                    this.io.emit('activar_notificacion')
+                }
+                console.log('SE ACTIVDA enviar')
                 this.io.emit('tableActivities', await getTableActivities())
 
             });
