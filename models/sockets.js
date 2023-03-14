@@ -26,34 +26,56 @@ class Sockets {
             socket.join('control')
 
             //* SALA DE LOS USUARIOS
-            socket.on('sala-Usuarios', (id) => {
+            socket.on('sala-Usuarios', async (id) => {
                 socket.join('notifications-user')
                 console.log(`El usuario ${id}: se conecto a la sala de notificaciones`)
+
+                if (socket.rooms.has('control')) {
+                    this.io.to('notifications-user').emit('tableNotifications_User', await getNotifications(id))
+
+                }
+
 
                 //TODO: PENDIENTE ELIMINAR
                 socket.on('deletedNotification', async (data) => {
                     await deletedNotifications(data)
                     if (socket.rooms.has('control')) {
-                        this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                        this.io.to('notifications-user').emit('tableNotifications_User', await getNotifications(id))
                     }
                 });
             })
 
-
+            //TODO: DETALLE CON NOTIFICACIONES PRIMER PASO
             socket.on('getTables', async () => {
                 this.io.emit('tableActivities', await getTableActivities())
+
                 if (socket.rooms.has('control')) {
-                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                    this.io.to('notifications-user').emit('activar_notificacion')
                 }
             });
 
-            socket.on('sendActivity', async (data) => {
-                const newActivity = await createActivities(data);
-                await createNotifications(newActivity);
-
+            //? ACTUALIZA LA TABLA
+            socket.on('sendIdDemo', async (id_user) => {
                 if (socket.rooms.has('control')) {
-                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                    this.io.to('notifications-user').emit('tableNotifications_User', await getNotifications(id_user))
                 }
+            })
+
+
+
+            socket.on('sendActivity', async (data, newArray) => {
+
+                await createActivities(data);
+                const newModelUser = newArray.map((item) => ({
+                    ...data,
+                    id_User: item.id
+                }))
+
+                await newModelUser.map((data) => {
+                    createNotifications(data)
+                })
+
+                this.io.to('notifications-user').emit('activar_notificacion')
 
                 this.io.emit('tableActivities', await getTableActivities())
 
@@ -75,14 +97,14 @@ class Sockets {
                 await messageRead(data)
                 if (socket.rooms.has('control')) {
 
-                    this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
+                    // this.io.to('notifications-user').emit('tableNotifications', await getNotifications())
                 }
             });
 
             //TODO: PENDIENTE
             socket.on('markAllAsRead', async (data) => {
                 await markAllAsRead(data)
-                this.io.emit('tableNotifications', await getNotifications())
+                // this.io.emit('tableNotifications', await getNotifications())
             })
 
 

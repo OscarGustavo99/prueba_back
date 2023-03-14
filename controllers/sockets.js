@@ -13,7 +13,6 @@ const getTableActivities = async () => {
 
 
 const createActivities = async (data) => {
-    console.log(data)
     try {
         const createActivities = await Actividad(data)
         await createActivities.save()
@@ -24,10 +23,11 @@ const createActivities = async (data) => {
     }
 }
 
-const createNotifications = async ({ id_Admin,adminName, description, notification }) => {
+const createNotifications = async ({ id_Admin,id_User,adminName, description, notification }) => {
     try {
         const objectNotificacion = {
             de: id_Admin,
+            para: id_User,
             name: adminName,
             description,
             notification
@@ -40,10 +40,12 @@ const createNotifications = async ({ id_Admin,adminName, description, notificati
     }
 }
 
-const getNotifications = async () => {
+const getNotifications = async (id) => {
     try {
-        const activides = await Notificacion.find()
-        return activides
+        const activities = await Notificacion.find(
+                {para:id,notification:false }
+            )
+        return activities
     } catch (err) {
         console.log(err)
     }

@@ -4,7 +4,7 @@ const ActividadSchema = Schema({
 
     id_Admin:{
        type:Schema.Types.ObjectId,
-       ref: 'Notificacion', //?
+       ref: 'Notificacion', 
        require: true 
     },
     adminName:{
